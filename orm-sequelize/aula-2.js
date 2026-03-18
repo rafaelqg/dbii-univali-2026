@@ -1,9 +1,9 @@
 const { Sequelize, DataTypes,Op, where, fn, col} = require('sequelize'); //npm install --save sequelize , npm install --save mysql2
-const MYSQL_IP="localhost";
-const MYSQL_LOGIN="root";
-const MYSQL_PASSWORD="root";
+const MYSQL_IP="mysql-209247-0.cloudclusters.net";
+const MYSQL_LOGIN="admin";
+const MYSQL_PASSWORD="Plz1LzeR";
 const DATABASE = "sakila";
-const sequelize = new Sequelize(DATABASE, MYSQL_LOGIN, MYSQL_PASSWORD,{host:MYSQL_IP, dialect: "mysql"});
+const sequelize = new Sequelize(DATABASE, MYSQL_LOGIN, MYSQL_PASSWORD,{host:MYSQL_IP, port:10028, dialect: "mysql"});
 
 const Actor = sequelize.define('Actor', {
   actor_id: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -67,6 +67,7 @@ async function filterByName(name){
 
 async function filterByNameContains(name){
   let returnedEntries = await Actor.findAll({
+    attributes: ['first_name', 'last_name'],
     where: {
       [Op.or]: [
         { first_name: { [Op.like]: `%${name}%` } },
@@ -189,15 +190,17 @@ async function getTotalRentalByMonthAndYear(month, year){
 
 //filterActors();
 //filterByName("john");
-//filterByNameContains("jo");
-filterByFullNameContains("JON CH");
+filterByNameContains("jo");
+
+//filterByFullNameContains("JON CH");
 //filterByNameIgnoreCase("john");
 //filterPaymentsByAmount(4);
 //filterFilmsByRating("PG");
 //filterFilmsByLengthGreater(60);
 //filterFilmsIdByRating("PG");
 
-//filterFormatedLastUpdatedDates();
+filterFormatedLastUpdatedDates();
 //filterNameOnly()
 //getAverageRentalValue();
  //getTotalRentalByMonthAndYear(2,2006);
+
