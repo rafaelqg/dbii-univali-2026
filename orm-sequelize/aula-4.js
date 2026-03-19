@@ -83,12 +83,11 @@ const Customer = sequelize.define('Customer', {
 }, {tableName: 'customer', timestamps: false});
 
 Inventory.hasMany(Rental, { foreignKey: 'inventoryId' });
-Rental.belongsTo(Inventory, { foreignKey: 'inventoryId' });
-Payment.belongsTo(Rental, { foreignKey: 'rentalId' });
-Payment.hasOne(Rental, { foreignKey: 'rentalId' });
-Payment.belongsTo(Customer, { foreignKey: 'customerId' });
 Inventory.belongsTo(Film, { foreignKey: 'filmId' });
+Rental.belongsTo(Inventory, { foreignKey: 'inventoryId' });
 Rental.belongsTo(Customer, { foreignKey: 'customerId' });
+Payment.belongsTo(Rental, { foreignKey: 'rentalId' });
+Payment.belongsTo(Customer, { foreignKey: 'customerId' });
 Customer.hasMany(Rental, { foreignKey: 'customerId' });
 
 function printSequelizeObjects(results){
@@ -145,8 +144,8 @@ async function totalPaymentsByStaff(){
   console.error("error", e);
  }
 };
-totalPaymentsByStaff();
+//totalPaymentsByStaff();
 
 
 //getCustomersWithMultiplePayments(20);  
-//getCustomerFilmRentedMoreThanOnce();
+getCustomerFilmRentedMoreThanOnce();
