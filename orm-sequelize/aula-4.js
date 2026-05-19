@@ -102,7 +102,7 @@ async function getCustomersWithMultiplePayments(times){
       'customerId',
       [Sequelize.literal('CONCAT(Customer.first_name, " ", Customer.last_name)'), 'customerName'],
       [fn('COUNT', col('payment_id')), 'paymentCount']],
-    include: [{ model: Customer, attributes: [] }],
+    include: [{ model: Customer , attributes: []  }],
     group: ['customerId'],
     having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('payment_id')), { [Sequelize.Op.gte]: times })
   });
@@ -121,8 +121,8 @@ async function getCustomerFilmRentedMoreThanOnce() {
       { model: Inventory,attributes: [], include: [ {model: Film, attributes: []}]}
     ],
     group: ['Rental.customer_id', 'Inventory.film_id'],
-    having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('Rental.rental_id')), Sequelize.Op.gt, 1),
-    raw: true
+    having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('Rental.rental_id')), Sequelize.Op.gt, 1)//,
+    //raw: true
   });
   printSequelizeObjects(results);
 }
@@ -133,12 +133,13 @@ async function totalPaymentsByStaff(){
   let results = await Payment.findAll({
     attributes: [
         "staff_id",
-        sequelize.fn("COUNT", sequelize.col("payment_id")),
+        [sequelize.fn("COUNT", sequelize.col("payment_id")), "Total payments"],
         [sequelize.fn("SUM", sequelize.col("amount")), "SUM amount($)"],
       ],
       group: 'staff_id',
       raw: true
   });
+  console.log("Total payments by staff:", results);
   printSequelizeObjects(results);
  }catch(e){
   console.error("error", e);
