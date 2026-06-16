@@ -1,4 +1,10 @@
 let cassandra = require('cassandra-driver');
+const express = require('express');
+
+const app = express();
+app.listen(4333);
+
+
 const keyspace="news";
 let contactPoints = ['localhost'];
 let client = new cassandra.Client({
@@ -28,4 +34,20 @@ keyspace:keyspace,localDataCenter:
     }
   });
 }
-cassandra_interaction();
+//cassandra_interaction();
+
+
+app.get('/news', function (request, response) {
+  const sql_select = "SELECT * FROM NEWS";
+  let query = sql_select;
+  let parameters= [];
+  client.execute(query,parameters, function(error, result){
+    if(error!=undefined){
+      console.log('Error:',error);
+    }else{
+       response.status(200);
+       response.setHeader('Content-Type', 'application/json');
+       response.send(JSON.stringify(result.rows));
+    }
+  });
+});
